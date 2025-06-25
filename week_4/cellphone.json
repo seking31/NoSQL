@@ -1,0 +1,26 @@
+{
+    "users": [
+      {
+        "_id": "1",
+        "firstName": "Alice",
+        "lastName": "Johnson"
+      }
+    ],
+    "chargers": [
+      {
+        "_id": "1",
+        "chargerType": "Electric",
+        "voltage": 20
+      }
+    ],
+    "devices": [
+      {
+        "_id": "1",
+        "deviceName": "iPhone",
+        "deviceType": "Smartphone",
+        "charger_id": "1",
+        "user_id": "1"
+      }
+    ]
+  }
+  
