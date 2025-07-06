@@ -1,0 +1,70 @@
+// Find all documents in the 'students' collection and format the output nicely.
+db.students.find().pretty();
+
+// Insert a new student into the 'students' collection with valid field names.
+db.students.insertOne({
+  firstName: "Sara",
+  lastName: "King",
+  studentId: "s1019", // note: correct casing (studentId, not studentID)
+  houseId: "h1008", // assuming Sara is in Hufflepuff
+});
+
+// Find the student by their unique studentId to confirm insertion.
+db.students.find({ studentId: "s1019" }).pretty();
+
+// Update the lastName of the student with studentId 's1019' to 'Kingsley'.
+db.students.updateOne(
+  { studentId: "s1019" }, // filter criteria
+  { $set: { lastName: "Kingsley" } } // update action
+);
+
+// Correct a field name by renaming 'studentID' to 'studentId'.
+db.students.updateOne(
+  { studentID: "s1019" }, // must match incorrect field
+  { $rename: { studentID: "studentId" } } // rename operation
+);
+
+// Remove the student with studentId 's1019' from the collection.
+db.students.deleteOne({ studentId: "s1019" });
+
+// Join 'houses' with 'students' on houseId to show each house and its students.
+db.houses.aggregate([
+  {
+    $lookup: {
+      from: "students", // collection to join
+      localField: "houseId", // field in 'houses'
+      foreignField: "houseId", // field in 'students'
+      as: "students", // name of the array field for joined data
+    },
+  },
+]);
+
+// Filter for Gryffindor house by houseId, then join to show students.
+db.houses.aggregate([
+  {
+    $match: { houseId: "h1007" }, // Gryffindor's houseId
+  },
+  {
+    $lookup: {
+      from: "students",
+      localField: "houseId",
+      foreignField: "houseId",
+      as: "students",
+    },
+  },
+]);
+
+// Filter for the house with mascot 'Eagle', then join with its students.
+db.houses.aggregate([
+  {
+    $match: { mascot: "Eagle" }, // Ravenclaw
+  },
+  {
+    $lookup: {
+      from: "students",
+      localField: "houseId",
+      foreignField: "houseId",
+      as: "students",
+    },
+  },
+]);
